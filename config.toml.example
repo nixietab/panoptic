@@ -1,0 +1,47 @@
+# Mumble server connection settings
+[server]
+host = "localhost"       # Mumble server hostname or IP
+port = 64738             # Mumble server port (default: 64738)
+password = ""            # Server password (leave empty if none)
+insecure = false         # Skip TLS certificate verification
+cert_file = ""           # Path to TLS client certificate (optional)
+key_file = ""            # Path to TLS client key (optional)
+
+# Bot identity and behavior
+[bot]
+username = "panoptic"    # Bot display name on Mumble
+channel = ""             # Channel to join on connect (empty = default)
+prefix = "."              # Command prefix (e.g. ".play", ".skip")
+show_duration = true     # Show track duration in the queue messages for YouTube/Jellyfin/HTTP
+
+# Audio playback settings
+[audio]
+volume = 0.3             # Default playback volume (0.0 - 1.0)
+ytdlp_path = "yt-dlp"    # Path to yt-dlp executable
+ffmpeg_path = "ffmpeg"   # Path to ffmpeg executable
+
+# URL domain whitelist (optional)
+[whitelist]
+enabled = false          # Enable to restrict playback to allowed domains
+domains = ["youtube.com", "youtu.be", "soundcloud.com"]
+
+# Jellyfin media server integration
+[jellyfin]
+enabled = false          # Enable Jellyfin support
+# List of Jellyfin servers to connect to
+# [[jellyfin.servers]]
+# name = "server1"           # Display name for this server
+# address = "http://localhost:8096"  # Server URL
+# user = ""                  # Jellyfin username
+# password = ""              # Jellyfin password
+# insecure = false           # Skip TLS verification for this server
+
+# Internet radio / streaming
+[radio]
+enabled = true           # Enable radio playback
+poll_interval = 30       # Seconds between metadata polls (0 = disable)
+cache_enabled = true     # Cache the full radio station list locally for offline search
+cache_ttl_hours = 24     # Hours before the station cache is refreshed (0 = never refresh)
+cache_file = "radio_stations.json"  # File where the station list is stored
+cache_in_memory = true    # Load the full station list into RAM for instant offline search (false = stream the JSON from disk on each search to save memory)
+quiet_updates = false    # Post radio now-playing updates only to the bot description, not to chat
