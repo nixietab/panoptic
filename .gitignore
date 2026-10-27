@@ -2,6 +2,7 @@ panoptic
 config.toml
 queue.json
 radio_stations.json
+go.sum
 *.pem
 *.key
 *.crt

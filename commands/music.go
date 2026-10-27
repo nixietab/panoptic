@@ -220,7 +220,7 @@ func cmdAbout(p *player.Player, sender string, isPrivate bool, arg string) {
 <h3>Panoptic 1.0.0</h3>
 <p style="margin:0">Simple and fast music bot for Mumble.</p>
 <p style="margin:0"><a href="https://github.com/nixietab/panoptic">github.com/nixietab/panoptic</a></p>
-<p style="margin:0">Licensed under AGPL 3.0.</p>
+<p style="margin:0">Licensed under GPL 2.0.</p>
 <br>` + buttonLogo() + `
 </td></tr></table>`
 	p.SendReply(about, sender, isPrivate)

@@ -32,4 +32,4 @@ $EDITOR config.toml
 
 ## License
 
-Distributed under the **GNU Affero General Public License v3.0**. See [LICENSE](LICENSE).
+Distributed under the **GNU General Public License v2.0**. See [LICENSE](LICENSE).
