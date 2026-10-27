@@ -40,7 +40,10 @@ func (j *JellyfinSource) IsWhitelisted(url string) bool {
 }
 
 func (j *JellyfinSource) isJellyfinURL(url string) bool {
-	return strings.Contains(url, j.Client.Address) && strings.Contains(url, "/Items/") && strings.Contains(url, "api_key=")
+	if !strings.Contains(url, j.Client.Address) || !strings.Contains(url, "/Items/") {
+		return false
+	}
+	return true
 }
 
 func (j *JellyfinSource) CacheTrack(url string, track *jellyfin.Track) {
@@ -57,6 +60,17 @@ func (j *JellyfinSource) getCachedTrack(url string) *jellyfin.Track {
 
 func (j *JellyfinSource) GetStream(url string) gumbleffmpeg.Source {
 	log.Printf("[Jellyfin:%s] Streaming: %s", j.Name, url)
+	token := j.Client.GetToken()
+	if token != "" {
+		authHeader := fmt.Sprintf("Authorization: MediaBrowser Token=\"%s\", Client=\"Panoptic\", Device=\"Go\", DeviceId=\"panoptic-bot\", Version=\"1.0.0\"\r\nX-Emby-Token: %s", token, token)
+		return gumbleffmpeg.SourceExec(j.FfmpegPath,
+			"-reconnect", "1",
+			"-reconnect_streamed", "1",
+			"-reconnect_delay_max", "5",
+			"-headers", authHeader,
+			"-i", url,
+			"-f", "opus", "-")
+	}
 	return gumbleffmpeg.SourceExec(j.FfmpegPath, "-reconnect", "1", "-reconnect_streamed", "1", "-reconnect_delay_max", "5", "-i", url, "-f", "opus", "-")
 }
 
@@ -100,7 +114,10 @@ func (j *JellyfinSource) downloadAndEncode(thumbURL string) string {
 	if err != nil {
 		return ""
 	}
-	req.Header.Set("X-Emby-Token", j.Client.GetToken())
+	token := j.Client.GetToken()
+	authHeader := fmt.Sprintf(`MediaBrowser Token="%s", Client="Panoptic", Device="Go", DeviceId="panoptic-bot", Version="1.0.0"`, token)
+	req.Header.Set("Authorization", authHeader)
+	req.Header.Set("X-Emby-Token", token)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Printf("[Jellyfin:%s] Thumbnail download failed: %v", j.Name, err)

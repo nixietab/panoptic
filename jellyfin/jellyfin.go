@@ -99,7 +99,9 @@ func (c *Client) Authenticate() error {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-Emby-Authorization", `MediaBrowser Client="Panoptic", Device="Go", DeviceId="panoptic-bot", Version="1.0.0"`)
+	authHeader := `MediaBrowser Client="Panoptic", Device="Go", DeviceId="panoptic-bot", Version="1.0.0"`
+	req.Header.Set("Authorization", authHeader)
+	req.Header.Set("X-Emby-Authorization", authHeader)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
@@ -144,6 +146,8 @@ func (c *Client) doRequest(method, path string, params url.Values) ([]byte, erro
 		return nil, err
 	}
 
+	authHeader := fmt.Sprintf(`MediaBrowser Token="%s", Client="Panoptic", Device="Go", DeviceId="panoptic-bot", Version="1.0.0"`, c.token)
+	req.Header.Set("Authorization", authHeader)
 	req.Header.Set("X-Emby-Token", c.token)
 
 	resp, err := c.client.Do(req)
@@ -157,6 +161,8 @@ func (c *Client) doRequest(method, path string, params url.Values) ([]byte, erro
 		if err := c.Authenticate(); err != nil {
 			return nil, err
 		}
+		authHeader = fmt.Sprintf(`MediaBrowser Token="%s", Client="Panoptic", Device="Go", DeviceId="panoptic-bot", Version="1.0.0"`, c.token)
+		req.Header.Set("Authorization", authHeader)
 		req.Header.Set("X-Emby-Token", c.token)
 		resp, err = c.client.Do(req)
 		if err != nil {
